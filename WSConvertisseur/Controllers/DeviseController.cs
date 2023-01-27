@@ -18,6 +18,12 @@ namespace WSConvertisseur.Controllers
             listDevises.Add(new Devise(3, "Yen", 120));
         }
 
+        /// <summary>
+        /// Get a single currency.
+        /// </summary>
+        /// <returns>Http response</returns>
+        /// <response code="200">When the Devise list is found</response>
+        /// <response code="404">When the Devise list is not found</response>
         // GET: api/<DeviseController>
         [HttpGet]
         public IEnumerable<Devise> GetAll()
@@ -25,33 +31,90 @@ namespace WSConvertisseur.Controllers
             return listDevises;
         }
 
+        /// <summary>
+        /// Get a single currency.
+        /// </summary>
+        /// <returns>Http response</returns>
+        /// <param name="id">The id of the currency</param>
+        /// <response code="200">When the currency id is found</response>
+        /// <response code="404">When the currency id is not found</response>
         // GET api/<DeviseController>/5
         [HttpGet("{id}", Name = "GetDevise")]
-        public Devise GetById(int id)
+        public ActionResult<Devise> GetById(int id)
         {
-            Devise? devise =
-                (from d in listDevises
-                 where d.Id == id
-                 select d).FirstOrDefault();
+            Devise? devise = listDevises.FirstOrDefault((d) => d.Id == id);
+            if (devise == null)
+            {
+                return NotFound();
+            }
             return devise;
         }
 
+        /// <summary>
+        /// Post a single currency.
+        /// </summary>
+        /// <returns>Http response</returns>
+        /// <param name="devise">new Devise</param>
+        /// <response code="200">When the devise is valid</response>
+        /// <response code="404">When the devise is not valid</response>
         // POST api/<DeviseController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Devise> Post([FromBody] Devise devise)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            listDevises.Add(devise);
+            return CreatedAtRoute("GetDevise", new { id = devise.Id }, devise);
         }
 
+        /// <summary>
+        /// Update a single currency.
+        /// </summary>
+        /// <returns>Http response</returns>
+        /// <param name="devise">new Devise</param>
+        /// <response code="200">When the devise is valid</response>
+        /// <response code="404">When the devise is not valid</response>
         // PUT api/<DeviseController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult Put(int id, [FromBody] Devise devise)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (id != devise.Id)
+            {
+                return BadRequest();
+            }
+            int index = listDevises.FindIndex((d) => d.Id == id);
+            if (index < 0)
+            {
+                return NotFound();
+            }
+            listDevises[index] = devise;
+            return NoContent();
         }
 
+        /// <summary>
+        /// Delete a single currency.
+        /// </summary>
+        /// <returns>Http response</returns>
+        /// <param name="devise">devise</param>
+        /// <response code="200">When the devise is found</response>
+        /// <response code="404">When the devise is not found</response>
         // DELETE api/<DeviseController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id}", Name = "GetDevise")]
+        public ActionResult<Devise> Delete(int id)
         {
+            Devise? devise = listDevises.FirstOrDefault((d) => d.Id == id);
+            if (devise == null)
+            {
+                return NotFound();
+            }
+            listDevises.Remove(devise);
+            return devise;
         }
     }
 }
