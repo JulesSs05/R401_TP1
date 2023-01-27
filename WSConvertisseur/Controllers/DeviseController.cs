@@ -26,6 +26,8 @@ namespace WSConvertisseur.Controllers
         /// <response code="404">When the Devise list is not found</response>
         // GET: api/<DeviseController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public IEnumerable<Devise> GetAll()
         {
             return listDevises;
@@ -40,6 +42,8 @@ namespace WSConvertisseur.Controllers
         /// <response code="404">When the currency id is not found</response>
         // GET api/<DeviseController>/5
         [HttpGet("{id}", Name = "GetDevise")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<Devise> GetById(int id)
         {
             Devise? devise = listDevises.FirstOrDefault((d) => d.Id == id);
@@ -59,6 +63,8 @@ namespace WSConvertisseur.Controllers
         /// <response code="404">When the devise is not valid</response>
         // POST api/<DeviseController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<Devise> Post([FromBody] Devise devise)
         {
             if (!ModelState.IsValid)
@@ -74,10 +80,13 @@ namespace WSConvertisseur.Controllers
         /// </summary>
         /// <returns>Http response</returns>
         /// <param name="devise">new Devise</param>
+        /// <param name="id">id</param>
         /// <response code="200">When the devise is valid</response>
         /// <response code="404">When the devise is not valid</response>
         // PUT api/<DeviseController>/5
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult Put(int id, [FromBody] Devise devise)
         {
             if (!ModelState.IsValid)
@@ -101,11 +110,13 @@ namespace WSConvertisseur.Controllers
         /// Delete a single currency.
         /// </summary>
         /// <returns>Http response</returns>
-        /// <param name="devise">devise</param>
+        /// <param name="id">id</param>
         /// <response code="200">When the devise is found</response>
         /// <response code="404">When the devise is not found</response>
         // DELETE api/<DeviseController>/5
         [HttpDelete("{id}", Name = "GetDevise")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<Devise> Delete(int id)
         {
             Devise? devise = listDevises.FirstOrDefault((d) => d.Id == id);
