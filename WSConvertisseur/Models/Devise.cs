@@ -33,9 +33,9 @@
 
         public Devise(int id, string? nomDevise, double taux)
         {
-            Id = id;
-            NomDevise = nomDevise;
-            Taux = taux;
+            this.Id = id;
+            this.NomDevise = nomDevise;
+            this.Taux = taux;
         }
     }
 }
